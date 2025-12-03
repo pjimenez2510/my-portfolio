@@ -1,0 +1,107 @@
+/**
+ * Professional experience data
+ */
+
+import type { Experience } from "@/lib/types";
+
+export const experiences: Experience[] = [
+  {
+    id: "exp-1",
+    company: "PROCONTY",
+    position: "Desarrollador Full Stack",
+    location: "Ambato, Ecuador",
+    startDate: "Mayo 2025",
+    endDate: "",
+    current: true,
+    description: [
+      "Desarrollo con .NET, Angular y Oracle",
+      "Proyecto FIDEVAL para venta de seguros",
+    ],
+    technologies: [".NET", "Angular", "Oracle"],
+    type: "empresa",
+  },
+  {
+    id: "exp-2",
+    company: "DIZASA",
+    position: "Desarrollador Frontend",
+    location: "Ambato, Ecuador",
+    startDate: "Febrero 2025",
+    endDate: "Mayo 2025",
+    current: false,
+    description: [
+      "Sistema de gestión para talleres mecánicos diésel",
+      "Next.js 14, React, Expo Go con Clean Architecture",
+      "Solución mobile-first con captura fotográfica y firmas digitales",
+      "Gestión de roles y portal para clientes",
+    ],
+    technologies: ["Next.js 14", "React", "Expo Go", "Clean Architecture"],
+    type: "empresa",
+  },
+  {
+    id: "exp-3",
+    company: "GITT - FISEI UTA",
+    position: "Desarrollador Backend",
+    location: "Ambato, Ecuador",
+    startDate: "Enero 2025",
+    endDate: "Mayo 2025",
+    current: false,
+    description: [
+      "Sistema de gestión de inventarios para FISEI-UTA",
+      "NestJS, PostgreSQL con Clean Architecture",
+      "Módulos de préstamos, devoluciones y gestión de ubicaciones",
+      "Migración de datos desde Excel con procesamiento por lotes",
+    ],
+    technologies: ["NestJS", "PostgreSQL", "Clean Architecture"],
+    type: "empresa",
+  },
+  {
+    id: "exp-4",
+    company: "SISAI - EEASA",
+    position: "Desarrollador Full Stack",
+    location: "Ambato, Ecuador",
+    startDate: "Agosto 2024",
+    endDate: "Diciembre 2024",
+    current: false,
+    description: [
+      "Sistema de gestión de contratación de ductos y postes",
+      "Spring Boot, Angular, Oracle con Clean Architecture",
+      "Gestión completa de usuarios, roles y ubicaciones geográficas",
+      "Generación automática de planillas",
+    ],
+    technologies: ["Spring Boot", "Angular", "Oracle", "Clean Architecture"],
+    type: "empresa",
+  },
+  {
+    id: "exp-5",
+    company: "GAD MOTORS",
+    position: "Desarrollador Frontend",
+    location: "Latacunga, Ecuador",
+    startDate: "Junio 2024",
+    endDate: "Julio 2024",
+    current: false,
+    description: [
+      "Sistema de agenda para talleres mecánicos",
+      "Next.js 14, TanStack Query, Sockets, Zustand",
+      "Calendario personalizado para gestión de actividades",
+      "Control de disponibilidad de mecánicos",
+    ],
+    technologies: ["Next.js 14", "TanStack Query", "Sockets", "Zustand"],
+    type: "empresa",
+  },
+  {
+    id: "exp-6",
+    company: "Sistema de Facturación Electrónica",
+    position: "Desarrollador Backend",
+    location: "Ambato, Ecuador",
+    startDate: "Diciembre 2023",
+    endDate: "Mayo 2024",
+    current: false,
+    description: [
+      "Backend con Java, Spring Boot y PostgreSQL",
+      "Gestión de inventario, ventas y facturación electrónica",
+      "Integración con el SRI",
+    ],
+    technologies: ["Java", "Spring Boot", "PostgreSQL"],
+    type: "freelance",
+  },
+];
