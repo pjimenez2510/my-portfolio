@@ -6,6 +6,7 @@
  */
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { GlassCard } from '../ui/GlassCard';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
@@ -77,17 +78,27 @@ function ProjectCard({ project }: { project: Project }) {
   return (
     <GlassCard hover className="flex flex-col h-full">
       {/* Thumbnail */}
-      <div className="relative w-full h-48 mb-4 rounded-lg overflow-hidden bg-linear-to-br from-accent/20 to-accent/5 dark:from-accent-dark/20 dark:to-accent-dark/5">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-6xl opacity-20">
-            {project.category === 'fullstack' && '🚀'}
-            {project.category === 'backend' && '⚙️'}
-            {project.category === 'frontend' && '🎨'}
-            {project.category === 'mobile' && '📱'}
+      <div className="relative w-full h-48 mb-4 rounded-lg overflow-hidden bg-secondary dark:bg-secondary-dark">
+        {project.thumbnail ? (
+          <Image
+            src={project.thumbnail}
+            alt={project.title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-accent/20 to-accent/5 dark:from-accent-dark/20 dark:to-accent-dark/5">
+            <div className="text-6xl opacity-20">
+              {project.category === 'fullstack' && '🚀'}
+              {project.category === 'backend' && '⚙️'}
+              {project.category === 'frontend' && '🎨'}
+              {project.category === 'mobile' && '📱'}
+            </div>
           </div>
-        </div>
+        )}
         {project.featured && (
-          <span className="absolute top-4 right-4 inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-accent dark:bg-accent-dark text-white shadow-lg border-2 border-white/20">
+          <span className="absolute top-4 right-4 inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-accent dark:bg-accent-dark text-white shadow-lg border-2 border-white/20 z-10">
             Destacado
           </span>
         )}
