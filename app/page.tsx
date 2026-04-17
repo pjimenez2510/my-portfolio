@@ -1,8 +1,3 @@
-/**
- * Home Page - Portfolio Main Page
- * Patricio Jiménez - Desarrollador Full Stack
- */
-
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ScrollIndicator } from '@/components/shared/ScrollIndicator';

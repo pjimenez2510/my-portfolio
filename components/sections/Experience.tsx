@@ -1,136 +1,114 @@
 'use client';
 
-/**
- * Experience Section
- * Professional experience timeline
- */
-
-import React, { useState } from 'react';
-import { GlassCard } from '../ui/GlassCard';
-import { Badge } from '../ui/Badge';
-import { SectionHeading } from '../ui/SectionHeading';
+import { useState } from 'react';
+import { MapPin, Calendar } from 'lucide-react';
 import { experiences } from '@/data/experience';
 import { formatDateRange } from '@/lib/utils';
 
 export function Experience() {
   const [filter, setFilter] = useState<'all' | 'empresa' | 'freelance'>('all');
 
-  const filteredExperiences = experiences.filter(
+  const filtered = experiences.filter(
     (exp) => filter === 'all' || exp.type === filter
   );
 
-  return (
-    <section id="experience" className="py-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          title="Experiencia Profesional"
-          subtitle="Mi trayectoria en el desarrollo de software"
-        />
+  const filters: { key: typeof filter; label: string }[] = [
+    { key: 'all', label: 'Todo' },
+    { key: 'empresa', label: 'Empresa' },
+    { key: 'freelance', label: 'Freelance' },
+  ];
 
-        {/* Filter Buttons */}
-        <div className="flex justify-center gap-4 mb-12">
-          <button
-            onClick={() => setFilter('all')}
-            className={`px-6 py-2 rounded-lg font-medium transition-all duration-300 ${
-              filter === 'all'
-                ? 'glass-strong text-accent dark:text-accent-dark'
-                : 'glass text-text-secondary hover:text-text-primary dark:hover:text-text-primary-dark'
-            }`}
-          >
-            Todas
-          </button>
-          <button
-            onClick={() => setFilter('empresa')}
-            className={`px-6 py-2 rounded-lg font-medium transition-all duration-300 ${
-              filter === 'empresa'
-                ? 'glass-strong text-accent dark:text-accent-dark'
-                : 'glass text-text-secondary hover:text-text-primary dark:hover:text-text-primary-dark'
-            }`}
-          >
-            Empresa
-          </button>
-          <button
-            onClick={() => setFilter('freelance')}
-            className={`px-6 py-2 rounded-lg font-medium transition-all duration-300 ${
-              filter === 'freelance'
-                ? 'glass-strong text-accent dark:text-accent-dark'
-                : 'glass text-text-secondary hover:text-text-primary dark:hover:text-text-primary-dark'
-            }`}
-          >
-            Freelance
-          </button>
+  return (
+    <section id="experience" className="py-24 sm:py-32 bg-bg-alt grain">
+      <div className="section-container">
+        {/* Section label */}
+        <div className="flex items-center gap-4 mb-16">
+          <div className="accent-line" />
+          <span className="font-mono text-xs text-accent tracking-widest uppercase">Experiencia</span>
         </div>
 
-        {/* Timeline */}
-        <div className="relative">
-          {/* Timeline Line */}
-          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-accent/20 dark:bg-accent-dark/20 -translate-x-1/2" />
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-text leading-tight">
+            Trayectoria
+          </h2>
 
-          {/* Experience Items */}
-          <div className="space-y-12">
-            {filteredExperiences.map((exp, index) => (
-              <div
-                key={exp.id}
-                className={`relative flex flex-col md:flex-row gap-8 ${
-                  index % 2 === 0 ? 'md:flex-row-reverse' : ''
+          {/* Filters */}
+          <div className="flex gap-1 p-1 bg-bg border border-border rounded-sm">
+            {filters.map((f) => (
+              <button
+                key={f.key}
+                onClick={() => setFilter(f.key)}
+                className={`px-4 py-1.5 text-xs font-mono tracking-wide transition-colors rounded-sm ${
+                  filter === f.key
+                    ? 'bg-accent text-[#0C0C0C] font-medium'
+                    : 'text-text-muted hover:text-text'
                 }`}
               >
-                {/* Timeline Dot */}
-                <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-accent dark:bg-accent-dark rounded-full ring-4 ring-primary dark:ring-primary-dark" />
-
-                {/* Spacer */}
-                <div className="hidden md:block flex-1" />
-
-                {/* Content */}
-                <div className="flex-1">
-                  <GlassCard hover>
-                    {/* Current Badge */}
-                    {exp.current && (
-                      <Badge className="mb-4 bg-accent/20 dark:bg-accent-dark/20 text-accent dark:text-accent-dark">
-                        Actualidad
-                      </Badge>
-                    )}
-
-                    {/* Header */}
-                    <div className="mb-4">
-                      <h3 className="text-2xl font-bold text-text-primary dark:text-text-primary-dark mb-1">
-                        {exp.position}
-                      </h3>
-                      <p className="text-lg text-accent dark:text-accent-dark font-semibold mb-2">
-                        {exp.company}
-                      </p>
-                      <p className="text-sm text-text-secondary dark:text-text-secondary">
-                        {formatDateRange(exp.startDate, exp.endDate, exp.current)} • {exp.location}
-                      </p>
-                    </div>
-
-                    {/* Description */}
-                    <ul className="space-y-2 mb-4">
-                      {exp.description.map((item, i) => (
-                        <li
-                          key={i}
-                          className="text-text-secondary dark:text-text-secondary flex gap-2"
-                        >
-                          <span className="text-accent dark:text-accent-dark mt-1">•</span>
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* Technologies */}
-                    <div className="flex flex-wrap gap-2">
-                      {exp.technologies.map((tech) => (
-                        <Badge key={tech}>{tech}</Badge>
-                      ))}
-                    </div>
-                  </GlassCard>
-                </div>
-              </div>
+                {f.label}
+              </button>
             ))}
           </div>
+        </div>
+
+        {/* Experience cards with left accent border */}
+        <div className="space-y-4">
+          {filtered.map((exp) => (
+            <div
+              key={exp.id}
+              className={`group border-l-2 pl-6 sm:pl-8 py-6 pr-6 bg-bg-elevated border border-border rounded-sm transition-colors ${
+                exp.current ? 'border-l-accent' : 'border-l-border-strong hover:border-l-accent/50'
+              }`}
+            >
+              {/* Top row */}
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-4">
+                <div>
+                  {exp.current && (
+                    <span className="inline-block font-mono text-[10px] tracking-[0.2em] uppercase text-accent mb-2">
+                      Actual
+                    </span>
+                  )}
+                  <h3 className="font-display text-lg font-bold text-text">
+                    {exp.position}
+                  </h3>
+                  <p className="text-accent text-sm font-medium">{exp.company}</p>
+                </div>
+                <div className="flex flex-col sm:items-end gap-1 text-xs text-text-muted font-mono shrink-0">
+                  <span className="inline-flex items-center gap-1.5">
+                    <Calendar className="w-3 h-3" />
+                    {formatDateRange(exp.startDate, exp.endDate, exp.current)}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <MapPin className="w-3 h-3" />
+                    {exp.location}
+                  </span>
+                </div>
+              </div>
+
+              {/* Description */}
+              <ul className="space-y-2 mb-4">
+                {exp.description.map((item, i) => (
+                  <li key={i} className="flex gap-3 text-sm text-text-secondary leading-relaxed">
+                    <span className="text-accent/60 mt-1.5 shrink-0 text-[8px]">&#9632;</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Tech */}
+              <div className="flex flex-wrap gap-2">
+                {exp.technologies.map((tech) => (
+                  <span
+                    key={tech}
+                    className="font-mono text-[11px] px-2.5 py-1 text-text-muted border border-border rounded-sm"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
   );
 }
-

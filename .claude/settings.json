@@ -1,0 +1,18 @@
+{
+  "enabledPlugins": {
+    "rules@context-engineering-kit-scm": true,
+    "skills@context-engineering-kit-scm": true,
+    "kaizen@context-engineering-kit-scm": true,
+    "reflexion@context-engineering-kit-scm": true,
+    "ddd@context-engineering-kit-scm": true,
+    "code-review@context-engineering-kit-scm": true,
+    "mcp@context-engineering-kit-scm": true,
+    "docs@context-engineering-kit-scm": true,
+    "sdd@context-engineering-kit-scm": true,
+    "customaize-agent@context-engineering-kit-scm": true,
+    "tdd@context-engineering-kit-scm": true,
+    "sadd@context-engineering-kit-scm": true,
+    "git@context-engineering-kit-scm": true,
+    "fpf@context-engineering-kit-scm": true
+  }
+}

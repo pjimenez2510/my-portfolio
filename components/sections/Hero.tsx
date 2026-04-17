@@ -1,96 +1,110 @@
 'use client';
 
-/**
- * Hero Section
- * Main landing section with introduction and CTA
- */
-
-import React from 'react';
-import { Button } from '../ui/Button';
-import { AnimatedText } from '../ui/AnimatedText';
+import { useEffect, useState } from 'react';
+import { ArrowDown } from 'lucide-react';
 import { SocialLinks } from '../shared/SocialLinks';
 import { PERSONAL_INFO } from '@/lib/constants';
 
 export function Hero() {
-  const roles = [
-    'Desarrollador Full Stack',
-    'Especialista en .NET & Angular',
-    'Arquitecto de Software',
-    'Backend Developer',
-  ];
+  const roles = ['Full Stack Developer', 'Backend Developer', 'Frontend Developer'];
+  const [currentRole, setCurrentRole] = useState(0);
+  const [displayed, setDisplayed] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const text = roles[currentRole];
+    let timeout: NodeJS.Timeout;
+    if (!isDeleting && displayed === text) {
+      timeout = setTimeout(() => setIsDeleting(true), 2400);
+    } else if (isDeleting && displayed === '') {
+      setIsDeleting(false);
+      setCurrentRole((prev) => (prev + 1) % roles.length);
+    } else {
+      timeout = setTimeout(() => {
+        setDisplayed(
+          isDeleting
+            ? text.substring(0, displayed.length - 1)
+            : text.substring(0, displayed.length + 1)
+        );
+      }, isDeleting ? 35 : 70);
+    }
+    return () => clearTimeout(timeout);
+  }, [displayed, isDeleting, currentRole, roles]);
 
   return (
     <section
       id="hero"
-      className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20"
+      className="min-h-[100dvh] flex items-end sm:items-center relative overflow-hidden grain"
     >
-      {/* Background Elements */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/5 dark:bg-accent-dark/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/5 dark:bg-accent-dark/5 rounded-full blur-3xl" />
-      </div>
+      {/* Decorative corner accent */}
+      <div className="absolute top-0 right-0 w-px h-40 bg-accent/30 hidden lg:block" />
+      <div className="absolute top-0 right-0 h-px w-40 bg-accent/30 hidden lg:block" />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
-          {/* Greeting */}
-          <p className="text-text-secondary dark:text-text-secondary text-lg mb-4 animate-fade-in">
-            👋 Hola, soy
+      <div className="section-container relative z-10 pb-24 sm:pb-0 w-full">
+        <div className="max-w-2xl stagger">
+
+          {/* Mono greeting */}
+          <p className="font-mono text-xs sm:text-sm text-accent tracking-widest uppercase mb-6 animate-reveal">
+            // hola, soy
           </p>
 
-          {/* Name */}
-          <h1 className="text-5xl md:text-7xl font-bold text-text-primary dark:text-text-primary-dark mb-6 animate-fade-in-up">
-            {PERSONAL_INFO.name}
+          {/* Name - editorial typography */}
+          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-extrabold tracking-tight leading-[0.95] text-text mb-5 animate-reveal">
+            Patricio
+            <br />
+            <span className="text-accent">Jiménez</span>
           </h1>
 
-          {/* Animated Role */}
-          <div className="text-2xl md:text-3xl text-accent dark:text-accent-dark font-semibold mb-8 h-12 flex items-center">
-            <AnimatedText texts={roles} />
+          {/* Accent line */}
+          <div className="accent-line mb-6 animate-reveal" />
+
+          {/* Typing role */}
+          <div className="h-8 sm:h-10 flex items-center mb-6 animate-reveal">
+            <span className="font-mono text-sm sm:text-base text-text-secondary tracking-wide">
+              {'> '}{displayed}
+              <span className="text-accent animate-pulse">_</span>
+            </span>
           </div>
 
           {/* Bio */}
-          <p className="text-lg md:text-xl text-text-secondary dark:text-text-secondary max-w-2xl mb-12 leading-relaxed">
+          <p className="text-base sm:text-lg text-text-secondary leading-relaxed max-w-lg mb-10 animate-reveal">
             {PERSONAL_INFO.bio}
           </p>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-12">
-            <Button variant="primary" size="lg" href="#contact">
-              Hablemos
-            </Button>
-            <Button variant="secondary" size="lg" href={PERSONAL_INFO.resumeUrl}>
-              Ver CV
-            </Button>
-          </div>
-
-          {/* Social Links */}
-          <SocialLinks iconSize="lg" />
-
-          {/* Scroll Indicator */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+          {/* CTAs */}
+          <div className="flex flex-wrap items-center gap-4 mb-10 animate-reveal">
             <a
-              href="#about"
-              className="flex flex-col items-center text-text-secondary hover:text-accent dark:hover:text-accent-dark transition-colors"
-              aria-label="Scroll to about section"
+              href="#contact"
+              className="px-7 py-3 bg-accent text-[#0C0C0C] rounded-none font-display font-semibold text-sm tracking-wide hover:bg-accent-hover transition-colors"
             >
-              <span className="text-sm mb-2">Scroll</span>
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 14l-7 7m0 0l-7-7m7 7V3"
-                />
-              </svg>
+              Hablemos
+            </a>
+            <a
+              href={PERSONAL_INFO.resumeUrl}
+              className="px-7 py-3 border border-border-strong text-text font-display font-semibold text-sm tracking-wide hover:border-accent hover:text-accent transition-colors"
+            >
+              Ver CV
             </a>
           </div>
+
+          {/* Social */}
+          <div className="animate-reveal">
+            <SocialLinks />
+          </div>
         </div>
+
+        {/* Scroll hint */}
+        <a
+          href="#about"
+          className="absolute bottom-8 right-6 sm:right-0 flex flex-col items-center gap-2 text-text-muted hover:text-accent transition-colors group"
+          aria-label="Scroll down"
+        >
+          <span className="font-mono text-[10px] tracking-[0.3em] uppercase rotate-90 origin-center translate-y-6 hidden sm:block">
+            Scroll
+          </span>
+          <ArrowDown className="w-4 h-4 animate-bounce sm:mt-12" />
+        </a>
       </div>
     </section>
   );
 }
-

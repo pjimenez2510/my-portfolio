@@ -1,72 +1,83 @@
 'use client';
 
-/**
- * Projects Section
- * Portfolio projects with filtering
- */
-
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
-import { GlassCard } from '../ui/GlassCard';
-import { Badge } from '../ui/Badge';
-import { Button } from '../ui/Button';
-import { SectionHeading } from '../ui/SectionHeading';
+import { ExternalLink, ArrowUpRight, Server, Layout, Smartphone, Layers } from 'lucide-react';
 import { projects } from '@/data/projects';
 import type { Project } from '@/lib/types';
 
 type FilterCategory = 'all' | 'backend' | 'frontend' | 'fullstack' | 'mobile';
 
+const categoryLabels: Record<string, string> = {
+  all: 'Todos',
+  fullstack: 'Full Stack',
+  backend: 'Backend',
+  frontend: 'Frontend',
+  mobile: 'Mobile',
+};
+
+const categoryIcons: Record<string, React.ElementType> = {
+  fullstack: Layers,
+  backend: Server,
+  frontend: Layout,
+  mobile: Smartphone,
+};
+
 export function Projects() {
   const [filter, setFilter] = useState<FilterCategory>('all');
-  const [showAll, setShowAll] = useState(false);
 
-  const filteredProjects = projects.filter(
-    (project) => filter === 'all' || project.category === filter
+  const filtered = projects.filter(
+    (p) => filter === 'all' || p.category === filter
   );
 
-  const displayedProjects = showAll ? filteredProjects : filteredProjects.slice(0, 6);
+  // First featured project gets a large card
+  const featured = filtered.find((p) => p.featured);
+  const rest = filtered.filter((p) => p !== featured);
 
   return (
-    <section id="projects" className="py-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          title="Proyectos"
-          subtitle="Algunos de los proyectos en los que he trabajado"
-        />
-
-        {/* Filter Buttons */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {(['all', 'fullstack', 'backend', 'frontend', 'mobile'] as FilterCategory[]).map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setFilter(cat)}
-              className={`px-6 py-2 rounded-lg font-medium transition-all duration-300 capitalize ${
-                filter === cat
-                  ? 'glass-strong text-accent dark:text-accent-dark'
-                  : 'glass text-text-secondary hover:text-text-primary dark:hover:text-text-primary-dark'
-              }`}
-            >
-              {cat === 'all' ? 'Todos' : cat}
-            </button>
-          ))}
+    <section id="projects" className="py-24 sm:py-32">
+      <div className="section-container">
+        {/* Section label */}
+        <div className="flex items-center gap-4 mb-16">
+          <div className="accent-line" />
+          <span className="font-mono text-xs text-accent tracking-widest uppercase">Proyectos</span>
         </div>
 
-        {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {displayedProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-text leading-tight">
+            Trabajo seleccionado
+          </h2>
+
+          <div className="flex gap-1 p-1 bg-bg-alt border border-border rounded-sm">
+            {(['all', 'fullstack', 'backend', 'frontend', 'mobile'] as FilterCategory[]).map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setFilter(cat)}
+                className={`px-3 py-1.5 text-xs font-mono tracking-wide transition-colors rounded-sm ${
+                  filter === cat
+                    ? 'bg-accent text-[#0C0C0C] font-medium'
+                    : 'text-text-muted hover:text-text'
+                }`}
+              >
+                {categoryLabels[cat]}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Show More Button */}
-        {filteredProjects.length > 6 && (
-          <div className="flex justify-center">
-            <Button
-              variant="secondary"
-              onClick={() => setShowAll(!showAll)}
-            >
-              {showAll ? 'Ver Menos' : `Ver Todos (${filteredProjects.length})`}
-            </Button>
+        {/* Featured project - large card */}
+        {featured && (
+          <div className="mb-6">
+            <FeaturedCard project={featured} />
+          </div>
+        )}
+
+        {/* Rest - smaller grid */}
+        {rest.length > 0 && (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {rest.map((project) => (
+              <CompactCard key={project.id} project={project} />
+            ))}
           </div>
         )}
       </div>
@@ -74,92 +85,106 @@ export function Projects() {
   );
 }
 
-function ProjectCard({ project }: { project: Project }) {
+function FeaturedCard({ project }: { project: Project }) {
   return (
-    <GlassCard hover className="flex flex-col h-full">
-      {/* Thumbnail */}
-      <div className="relative w-full h-48 mb-4 rounded-lg overflow-hidden bg-secondary dark:bg-secondary-dark">
+    <div className="grid md:grid-cols-2 gap-0 border border-border rounded-sm overflow-hidden bg-bg-elevated group">
+      {/* Image */}
+      <div className="relative aspect-video md:aspect-auto bg-bg-alt overflow-hidden">
         {project.thumbnail ? (
           <Image
             src={project.thumbnail}
             alt={project.title}
             fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover group-hover:scale-[1.03] transition-transform duration-700"
+            sizes="(max-width: 768px) 100vw, 50vw"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-accent/20 to-accent/5 dark:from-accent-dark/20 dark:to-accent-dark/5">
-            <div className="text-6xl opacity-20">
-              {project.category === 'fullstack' && '🚀'}
-              {project.category === 'backend' && '⚙️'}
-              {project.category === 'frontend' && '🎨'}
-              {project.category === 'mobile' && '📱'}
-            </div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Layers className="w-16 h-16 text-text-muted/20" />
           </div>
-        )}
-        {project.featured && (
-          <span className="absolute top-4 right-4 inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-accent dark:bg-accent-dark text-white shadow-lg border-2 border-white/20 z-10">
-            Destacado
-          </span>
         )}
       </div>
 
       {/* Content */}
-      <div className="flex-1 flex flex-col">
-        <h3 className="text-xl font-bold text-text-primary dark:text-text-primary-dark mb-2">
+      <div className="p-6 sm:p-8 flex flex-col justify-center">
+        <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-accent mb-3">
+          Destacado &middot; {project.year}
+        </span>
+        <h3 className="font-display text-xl sm:text-2xl font-bold text-text mb-3">
           {project.title}
         </h3>
-        <p className="text-text-secondary dark:text-text-secondary mb-4 flex-1">
-          {project.description}
+        <p className="text-sm text-text-secondary leading-relaxed mb-5">
+          {project.longDescription || project.description}
         </p>
-
-        {/* Technologies */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {project.technologies.slice(0, 3).map((tech) => (
-            <Badge key={tech} variant="outline">
+        <div className="flex flex-wrap gap-2 mb-5">
+          {project.technologies.map((tech) => (
+            <span key={tech} className="font-mono text-[11px] px-2.5 py-1 text-text-muted border border-border rounded-sm">
               {tech}
-            </Badge>
+            </span>
           ))}
-          {project.technologies.length > 3 && (
-            <Badge variant="outline">+{project.technologies.length - 3}</Badge>
-          )}
         </div>
-
-        {/* Links */}
-        <div className="flex gap-2">
-          {project.links.github && (
-            <Button
-              variant="ghost"
-              size="sm"
-              href={project.links.github}
-              className="flex-1"
-            >
-              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  fillRule="evenodd"
-                  d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              GitHub
-            </Button>
-          )}
-          {project.links.demo && (
-            <Button
-              variant="ghost"
-              size="sm"
-              href={project.links.demo}
-              className="flex-1"
-            >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-              Demo
-            </Button>
-          )}
-        </div>
+        {(project.links.github || project.links.demo) && (
+          <div className="flex gap-4">
+            {project.links.github && (
+              <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-mono text-text-secondary hover:text-accent transition-colors">
+                Código <ArrowUpRight className="w-3 h-3" />
+              </a>
+            )}
+            {project.links.demo && (
+              <a href={project.links.demo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-mono text-text-secondary hover:text-accent transition-colors">
+                Demo <ExternalLink className="w-3 h-3" />
+              </a>
+            )}
+          </div>
+        )}
       </div>
-    </GlassCard>
+    </div>
   );
 }
 
+function CompactCard({ project }: { project: Project }) {
+  const Icon = categoryIcons[project.category] || Layers;
+
+  return (
+    <div className="border border-border rounded-sm bg-bg-elevated overflow-hidden group hover:border-accent/30 transition-colors">
+      {/* Image */}
+      <div className="relative aspect-video bg-bg-alt overflow-hidden">
+        {project.thumbnail ? (
+          <Image
+            src={project.thumbnail}
+            alt={project.title}
+            fill
+            className="object-cover group-hover:scale-[1.03] transition-transform duration-700"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Icon className="w-10 h-10 text-text-muted/20" />
+          </div>
+        )}
+      </div>
+
+      <div className="p-5">
+        <div className="flex items-center gap-2 mb-2">
+          <Icon className="w-3.5 h-3.5 text-text-muted" />
+          <span className="font-mono text-[10px] text-text-muted uppercase tracking-wider">
+            {project.category} &middot; {project.year}
+          </span>
+        </div>
+        <h3 className="font-display text-base font-bold text-text mb-2 leading-snug">
+          {project.title}
+        </h3>
+        <p className="text-sm text-text-secondary leading-relaxed mb-4">
+          {project.description}
+        </p>
+        <div className="flex flex-wrap gap-1.5">
+          {project.technologies.map((tech) => (
+            <span key={tech} className="font-mono text-[10px] px-2 py-0.5 text-text-muted border border-border rounded-sm">
+              {tech}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

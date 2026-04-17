@@ -1,69 +1,55 @@
-/**
- * Skills Section
- * Technical skills organized by categories
- */
+import { Server, Monitor, Database, Wrench } from 'lucide-react';
+import { skillCategories } from '@/data/skills';
 
-import React from 'react';
-import { GlassCard } from '../ui/GlassCard';
-import { Badge } from '../ui/Badge';
-import { SectionHeading } from '../ui/SectionHeading';
-import { skillCategories, currentlyLearning } from '@/data/skills';
+const categoryIcons: Record<string, React.ElementType> = {
+  Backend: Server,
+  Frontend: Monitor,
+  'Bases de Datos': Database,
+  'Herramientas y Prácticas': Wrench,
+};
 
 export function Skills() {
   return (
-    <section id="skills" className="py-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          title="Habilidades"
-          subtitle="Tecnologías y herramientas que domino"
-        />
-
-        {/* Skills Grid */}
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
-          {skillCategories.map((category) => (
-            <GlassCard key={category.title} hover>
-              <h3 className="text-2xl font-bold text-text-primary dark:text-text-primary-dark mb-6">
-                {category.title}
-              </h3>
-              <div className="space-y-4">
-                {category.skills.map((skill) => (
-                  <div key={skill.name}>
-                    <div className="flex justify-between mb-2">
-                      <span className="text-text-primary dark:text-text-primary-dark font-medium">
-                        {skill.name}
-                      </span>
-                      <span className="text-text-secondary dark:text-text-secondary text-sm">
-                        {skill.level}%
-                      </span>
-                    </div>
-                    <div className="h-2 glass rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-accent dark:bg-accent-dark transition-all duration-1000 rounded-full"
-                        style={{ width: `${skill.level}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </GlassCard>
-          ))}
+    <section id="skills" className="py-24 sm:py-32 bg-bg-alt grain">
+      <div className="section-container">
+        {/* Section label */}
+        <div className="flex items-center gap-4 mb-16">
+          <div className="accent-line" />
+          <span className="font-mono text-xs text-accent tracking-widest uppercase">Habilidades</span>
         </div>
 
-        {/* Currently Learning */}
-        <GlassCard className="text-center">
-          <h3 className="text-xl font-bold text-text-primary dark:text-text-primary-dark mb-4">
-            📚 Actualmente Aprendiendo
-          </h3>
-          <div className="flex flex-wrap justify-center gap-3">
-            {currentlyLearning.map((item) => (
-              <Badge key={item} variant="glass">
-                {item}
-              </Badge>
-            ))}
-          </div>
-        </GlassCard>
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-text leading-tight mb-12">
+          Stack tecnológico
+        </h2>
+
+        <div className="grid sm:grid-cols-2 gap-6">
+          {skillCategories.map((category) => {
+            const Icon = categoryIcons[category.title] || Wrench;
+
+            return (
+              <div key={category.title} className="p-6 border border-border rounded-sm bg-bg-elevated">
+                <div className="flex items-center gap-3 mb-5">
+                  <Icon className="w-4 h-4 text-accent" />
+                  <h3 className="font-display font-semibold text-text text-sm tracking-wide">
+                    {category.title}
+                  </h3>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {category.skills.map((skill) => (
+                    <span
+                      key={skill.name}
+                      className="px-3 py-2 text-sm text-text border border-border rounded-sm hover:border-accent/40 hover:text-accent transition-colors cursor-default"
+                    >
+                      {skill.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
 }
-

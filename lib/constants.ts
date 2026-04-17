@@ -6,12 +6,12 @@ import type { NavItem, PersonalInfo } from './types';
 
 export const PERSONAL_INFO: PersonalInfo = {
   name: 'Patricio Jiménez',
-  role: 'Desarrollador Full Stack',
-  bio: 'Desarrollador Full Stack especializado en arquitecturas limpias y metodologías ágiles. Experiencia en desarrollo backend con Java/Spring Boot, .NET y Node.js/NestJS, y frontend con Angular, React y Next.js. Apasionado por crear soluciones eficientes y escalables.',
+  role: 'Full Stack Developer',
+  bio: 'Full Stack Developer con experiencia en Java/Spring Boot, .NET, Node.js/NestJS y frontend con Angular, React y Next.js. Enfocado en Clean Architecture y metodologías ágiles.',
   resumeUrl: '/PATRICIO JIMENEZ CV.pdf',
   contact: {
     email: 'pjimenez2510@gmail.com',
-    phone: '0990862306',
+    phone: '+593 990862306',
     location: 'Ambato, Ecuador',
     social: [
       {
@@ -38,18 +38,11 @@ export const NAV_ITEMS: NavItem[] = [
 ];
 
 export const SITE_CONFIG = {
-  title: 'Patricio Jiménez | Desarrollador Full Stack',
-  description: 'Portafolio profesional de Patricio Jiménez - Desarrollador Full Stack especializado en .NET, Angular, React, Next.js y arquitecturas limpias.',
-  keywords: ['Desarrollador Full Stack', 'Next.js', 'React', 'Angular', '.NET', 'Java', 'Spring Boot', 'NestJS', 'Clean Architecture'],
+  title: 'Patricio Jiménez | Full Stack Developer',
+  description: 'Portafolio de Patricio Jiménez — Full Stack Developer especializado en Spring Boot, .NET, Angular, React, Next.js y Clean Architecture.',
+  keywords: ['Full Stack Developer', 'Next.js', 'React', 'Angular', '.NET', 'Java', 'Spring Boot', 'NestJS', 'Clean Architecture'],
   author: 'Patricio Jiménez',
-  siteUrl: 'https://pjimenez.dev', // Actualizar con tu dominio real
-  version: '1.0.0',
-};
-
-export const ANIMATION_DURATION = {
-  fast: 200,
-  normal: 300,
-  slow: 500,
+  siteUrl: 'https://pjimenez.dev',
 };
 
 export const BREAKPOINTS = {
@@ -59,4 +52,3 @@ export const BREAKPOINTS = {
   xl: 1280,
   '2xl': 1536,
 };
-

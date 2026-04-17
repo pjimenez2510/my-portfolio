@@ -1,5 +1,6 @@
 /**
  * Projects portfolio data
+ * Technologies match CV exactly
  */
 
 import type { Project } from "@/lib/types";
@@ -7,13 +8,13 @@ import type { Project } from "@/lib/types";
 export const projects: Project[] = [
   {
     id: "project-1",
-    title: "FIDEVAL - Sistema de Venta de Seguros",
+    title: "FIDEVAL – Venta de Seguros",
     description:
-      "Sistema completo para gestión y venta de seguros desarrollado con .NET, Angular y Oracle.",
+      "Módulo end-to-end de venta de seguros con motor de débito automático para 20,000+ asegurados.",
     longDescription:
-      "Plataforma integral para la gestión de pólizas de seguros, incluyendo módulos de cotización, emisión, cobro y reportería. Implementa arquitectura limpia y patrones de diseño robustos.",
+      "Plataforma integral para gestión de pólizas de seguros, incluyendo administración, emisión, débito automático con configuraciones flexibles y procesamiento masivo de archivos.",
     thumbnail: "/fideval.png",
-    technologies: [".NET", "Angular", "Oracle", "TypeScript"],
+    technologies: [".NET", "Node.js", "Angular", "Oracle Forms", "PL/SQL"],
     category: "fullstack",
     links: {},
     featured: true,
@@ -21,13 +22,13 @@ export const projects: Project[] = [
   },
   {
     id: "project-2",
-    title: "DIZASA - Gestión de Talleres Diésel",
+    title: "DIZASA – Gestión de Talleres",
     description:
-      "Sistema de gestión para talleres mecánicos con solución mobile-first y captura de evidencias.",
+      "Aplicación web y móvil para gestión de talleres diésel con captura de evidencias y portal de clientes.",
     longDescription:
-      "Aplicación móvil y web para gestión integral de talleres mecánicos diésel, con funcionalidades de órdenes de trabajo, captura fotográfica, firmas digitales y portal para clientes. Desarrollado con Clean Architecture.",
+      "Solución multiplataforma con captura fotográfica, firmas digitales, acceso basado en roles y portal de autoservicio para clientes.",
     thumbnail: "/dizasa.png",
-    technologies: ["Next.js 14", "React", "Expo Go", "TypeScript"],
+    technologies: ["Next.js", "React", "Expo Go"],
     category: "fullstack",
     links: {},
     featured: true,
@@ -35,13 +36,13 @@ export const projects: Project[] = [
   },
   {
     id: "project-3",
-    title: "GITT - Sistema de Inventarios",
+    title: "GITT – Inventarios Universitarios",
     description:
-      "Sistema de gestión de inventarios para FISEI-UTA con módulos de préstamos y control de ubicaciones.",
+      "Sistema de inventarios para FISEI-UTA con seguimiento de préstamos y migración de datos legacy.",
     longDescription:
-      "Backend robusto con NestJS para gestión de inventarios universitarios, incluyendo préstamos, devoluciones, control de ubicaciones y migración automatizada de datos desde Excel.",
+      "Backend con NestJS para gestión de inventarios universitarios, préstamos/devoluciones de activos y pipeline de migración por lotes desde Excel.",
     thumbnail: "/gitt.png",
-    technologies: ["NestJS", "PostgreSQL", "TypeScript", "Clean Architecture"],
+    technologies: ["NestJS", "PostgreSQL"],
     category: "backend",
     links: {},
     featured: true,
@@ -49,13 +50,13 @@ export const projects: Project[] = [
   },
   {
     id: "project-4",
-    title: "SISAI - Gestión de Ductos y Postes",
+    title: "SISAI – Gestión de Ductos y Postes",
     description:
-      "Sistema para EEASA de contratación de ductos y postes con generación automática de planillas.",
+      "Sistema de contratación para EEASA con motor de facturación configurable para múltiples tipos de contrato.",
     longDescription:
-      "Plataforma completa para gestión de contratación de infraestructura eléctrica, con módulos de usuarios, roles, ubicaciones geográficas y generación automática de documentos.",
+      "Plataforma de gestión documental y contratación para infraestructura eléctrica con estructuras de costo y reglas de generación distintas.",
     thumbnail: "/sisai.jpeg",
-    technologies: ["Spring Boot", "Angular", "Oracle", "Java"],
+    technologies: ["Spring Boot", "Angular", "Oracle"],
     category: "fullstack",
     links: {},
     featured: true,
@@ -63,13 +64,13 @@ export const projects: Project[] = [
   },
   {
     id: "project-5",
-    title: "GAD MOTORS - Sistema de Agenda",
+    title: "GAD MOTORS – Agendamiento",
     description:
-      "Aplicación web de agendamiento para talleres mecánicos con calendario personalizado.",
+      "Sistema de agendamiento en tiempo real para talleres mecánicos con calendario personalizado.",
     longDescription:
-      "Sistema de gestión de citas y agenda para talleres mecánicos, con calendario interactivo, control de disponibilidad de mecánicos y comunicación en tiempo real con WebSockets.",
+      "Aplicación web con calendario interactivo, seguimiento de disponibilidad en vivo y comunicación en tiempo real.",
     thumbnail: "/gab-motors.png",
-    technologies: ["Next.js 14", "TanStack Query", "Sockets", "Zustand"],
+    technologies: ["Next.js", "TanStack Query", "WebSockets", "Zustand"],
     category: "frontend",
     links: {},
     featured: false,
@@ -77,11 +78,11 @@ export const projects: Project[] = [
   },
   {
     id: "project-6",
-    title: "Sistema de Facturación Electrónica",
+    title: "Facturación Electrónica",
     description:
-      "Backend para gestión de inventario, ventas y facturación electrónica con integración SRI.",
+      "Backend para inventario, ventas y facturación electrónica con integración al SRI ecuatoriano.",
     longDescription:
-      "API REST completa para sistema de facturación electrónica con integración al SRI ecuatoriano, gestión de inventario y módulo de ventas.",
+      "API REST para sistema de facturación electrónica con integración a la autoridad tributaria de Ecuador para generación automatizada de documentos fiscales.",
     thumbnail: "",
     technologies: ["Java", "Spring Boot", "PostgreSQL"],
     category: "backend",
