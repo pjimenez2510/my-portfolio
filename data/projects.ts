@@ -1,5 +1,5 @@
 /**
- * Projects portfolio data
+ * Projects portfolio data — catálogo de servicios
  * Technologies match CV exactly
  */
 
@@ -8,6 +8,7 @@ import type { Project } from "@/lib/types";
 export const projects: Project[] = [
   {
     id: "project-1",
+    slug: "fideval",
     title: "FIDEVAL – Venta de Seguros",
     description:
       "Módulo end-to-end de venta de seguros con motor de débito automático para 20,000+ asegurados.",
@@ -16,12 +17,15 @@ export const projects: Project[] = [
     thumbnail: "/fideval.png",
     technologies: [".NET", "Node.js", "Angular", "Oracle Forms", "PL/SQL"],
     category: "fullstack",
+    status: "prod",
+    metric: "20.000+ asegurados",
     links: {},
     featured: true,
     year: 2025,
   },
   {
     id: "project-2",
+    slug: "dizasa",
     title: "DIZASA – Gestión de Talleres",
     description:
       "Aplicación web y móvil para gestión de talleres diésel con captura de evidencias y portal de clientes.",
@@ -30,12 +34,15 @@ export const projects: Project[] = [
     thumbnail: "/dizasa.png",
     technologies: ["Next.js", "React", "Expo Go"],
     category: "fullstack",
+    status: "stable",
+    metric: "web + móvil, una sola base de código",
     links: {},
     featured: true,
     year: 2025,
   },
   {
     id: "project-3",
+    slug: "gitt",
     title: "GITT – Inventarios Universitarios",
     description:
       "Sistema de inventarios para FISEI-UTA con seguimiento de préstamos y migración de datos legacy.",
@@ -44,12 +51,15 @@ export const projects: Project[] = [
     thumbnail: "/gitt.png",
     technologies: ["NestJS", "PostgreSQL"],
     category: "backend",
+    status: "stable",
+    metric: "migración legacy con reporte por registro",
     links: {},
     featured: true,
     year: 2025,
   },
   {
     id: "project-4",
+    slug: "sisai",
     title: "SISAI – Gestión de Ductos y Postes",
     description:
       "Sistema de contratación para EEASA con motor de facturación configurable para múltiples tipos de contrato.",
@@ -58,12 +68,15 @@ export const projects: Project[] = [
     thumbnail: "/sisai.jpeg",
     technologies: ["Spring Boot", "Angular", "Oracle"],
     category: "fullstack",
+    status: "stable",
+    metric: "facturación multi-contrato",
     links: {},
     featured: true,
     year: 2024,
   },
   {
     id: "project-5",
+    slug: "gad-motors",
     title: "GAD MOTORS – Agendamiento",
     description:
       "Sistema de agendamiento en tiempo real para talleres mecánicos con calendario personalizado.",
@@ -72,12 +85,15 @@ export const projects: Project[] = [
     thumbnail: "/gab-motors.png",
     technologies: ["Next.js", "TanStack Query", "WebSockets", "Zustand"],
     category: "frontend",
+    status: "stable",
+    metric: "disponibilidad en tiempo real",
     links: {},
     featured: false,
     year: 2024,
   },
   {
     id: "project-6",
+    slug: "sri-billing",
     title: "Facturación Electrónica",
     description:
       "Backend para inventario, ventas y facturación electrónica con integración al SRI ecuatoriano.",
@@ -86,6 +102,8 @@ export const projects: Project[] = [
     thumbnail: "",
     technologies: ["Java", "Spring Boot", "PostgreSQL"],
     category: "backend",
+    status: "stable",
+    metric: "documentos fiscales automatizados",
     links: {},
     featured: false,
     year: 2024,

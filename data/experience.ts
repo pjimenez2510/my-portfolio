@@ -1,6 +1,7 @@
 /**
  * Professional experience data
  * Based on CV - accurate descriptions
+ * startISO/endISO (YYYY-MM) posicionan cada span en el trace timeline
  */
 
 import type { Experience } from "@/lib/types";
@@ -13,6 +14,7 @@ export const experiences: Experience[] = [
     location: "Quito, Ecuador",
     startDate: "Mayo 2025",
     endDate: "",
+    startISO: "2025-05",
     current: true,
     description: [
       "Módulo end-to-end de venta de seguros, desde administración hasta emisión de pólizas, cubriendo el ciclo completo de productos de fondos y seguros con .NET, NodeJs, Angular, Oracle Forms y PL/SQL.",
@@ -30,6 +32,8 @@ export const experiences: Experience[] = [
     location: "Ambato, Ecuador",
     startDate: "Febrero 2025",
     endDate: "Mayo 2025",
+    startISO: "2025-02",
+    endISO: "2025-05",
     current: false,
     description: [
       "Aplicación web y móvil multiplataforma para gestión de talleres diésel (Next.js 14, React, Expo Go, Clean Architecture) con captura fotográfica, firmas digitales, acceso basado en roles y portal de autoservicio para clientes.",
@@ -44,6 +48,8 @@ export const experiences: Experience[] = [
     location: "Ambato, Ecuador",
     startDate: "Enero 2025",
     endDate: "Mayo 2025",
+    startISO: "2025-01",
+    endISO: "2025-05",
     current: false,
     description: [
       "Sistema de gestión de inventarios universitarios (NestJS, PostgreSQL, Clean Architecture) con seguimiento de préstamos/devoluciones de activos y pipeline de migración por lotes desde datos legacy en Excel con reporte de errores por registro.",
@@ -58,6 +64,8 @@ export const experiences: Experience[] = [
     location: "Ambato, Ecuador",
     startDate: "Agosto 2024",
     endDate: "Diciembre 2024",
+    startISO: "2024-08",
+    endISO: "2024-12",
     current: false,
     description: [
       "Sistema de gestión documental y contratación para infraestructura de ductos/postes (Spring Boot, Angular, Oracle) con motor de facturación configurable que soporta múltiples tipos de contrato con estructuras de costo y reglas de generación distintas.",
@@ -72,6 +80,8 @@ export const experiences: Experience[] = [
     location: "Latacunga, Ecuador",
     startDate: "Junio 2024",
     endDate: "Julio 2024",
+    startISO: "2024-06",
+    endISO: "2024-07",
     current: false,
     description: [
       "Sistema de agendamiento en tiempo real para talleres mecánicos (Next.js 14, TanStack Query, WebSockets, Zustand) con calendario personalizado y seguimiento de disponibilidad en vivo.",
@@ -86,6 +96,8 @@ export const experiences: Experience[] = [
     location: "Ambato, Ecuador",
     startDate: "Diciembre 2023",
     endDate: "Mayo 2024",
+    startISO: "2023-12",
+    endISO: "2024-05",
     current: false,
     description: [
       "Backend para inventario, ventas y facturación electrónica con Java, Spring Boot y PostgreSQL, integrando con la autoridad tributaria de Ecuador (SRI) para generación automatizada de documentos fiscales.",

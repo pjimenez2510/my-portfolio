@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ArrowUp } from 'lucide-react';
 
 export function ScrollIndicator() {
   const [progress, setProgress] = useState(0);
@@ -10,7 +9,7 @@ export function ScrollIndicator() {
   useEffect(() => {
     const onScroll = () => {
       const h = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress((window.scrollY / h) * 100);
+      setProgress(h > 0 ? (window.scrollY / h) * 100 : 0);
       setVisible(window.scrollY > 400);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -19,21 +18,22 @@ export function ScrollIndicator() {
 
   return (
     <>
-      <div className="fixed top-0 left-0 w-full h-[2px] z-[60]">
+      {/* barra de progreso — telemetría de lectura */}
+      <div className="fixed top-0 left-0 w-full h-[2px] z-[70]" aria-hidden="true">
         <div
-          className="h-full bg-accent transition-all duration-150"
+          className="h-full bg-accent transition-[width] duration-150"
           style={{ width: `${progress}%` }}
         />
       </div>
 
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className={`fixed bottom-6 right-6 w-10 h-10 flex items-center justify-center border border-border bg-bg-elevated text-text-muted hover:text-accent hover:border-accent transition-all z-40 ${
+        className={`fixed bottom-5 right-5 z-40 border border-border bg-panel px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-text-muted hover:text-accent hover:border-accent transition-all ${
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
         aria-label="Volver arriba"
       >
-        <ArrowUp className="w-4 h-4" />
+        ▲ top
       </button>
     </>
   );

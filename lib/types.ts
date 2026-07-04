@@ -9,6 +9,10 @@ export interface Experience {
   location: string;
   startDate: string;
   endDate: string;
+  /** YYYY-MM — posiciona el span en el trace timeline */
+  startISO: string;
+  /** YYYY-MM — vacío si current */
+  endISO?: string;
   current: boolean;
   description: string[];
   technologies: string[];
@@ -18,12 +22,18 @@ export interface Experience {
 
 export interface Project {
   id: string;
+  /** identificador de servicio: svc/<slug> */
+  slug: string;
   title: string;
   description: string;
   longDescription?: string;
   thumbnail: string;
   technologies: string[];
   category: "backend" | "frontend" | "fullstack" | "mobile";
+  /** prod = sigue vivo en producción · stable = entregado y operando */
+  status: "prod" | "stable";
+  /** métrica real destacable del sistema */
+  metric?: string;
   links: {
     github?: string;
     demo?: string;
@@ -34,13 +44,15 @@ export interface Project {
 
 export interface Skill {
   name: string;
-  level: number; // 1-100
-  icon?: string;
+  /** slugs de los sistemas reales que dependen de esta tecnología; ['*'] = transversal */
+  usedIn: string[];
   category: "backend" | "frontend" | "database" | "tools";
 }
 
 export interface SkillCategory {
   title: string;
+  /** nombre de "directorio" en el manifiesto de dependencias */
+  dir: string;
   skills: Skill[];
 }
 
@@ -60,7 +72,6 @@ export interface ContactInfo {
 export interface ContactFormData {
   name: string;
   email: string;
-  subject: string;
   message: string;
 }
 

@@ -1,17 +1,25 @@
-import type { Metadata } from "next";
-import { Syne, DM_Sans } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Martian_Mono, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 import { SITE_CONFIG } from "@/lib/constants";
 
-const syne = Syne({
-  variable: "--font-syne",
+const martian = Martian_Mono({
+  variable: "--font-martian",
   subsets: ["latin"],
   display: "swap",
 });
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+});
+
+const plexSans = IBM_Plex_Sans({
+  variable: "--font-plex-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
   display: "swap",
 });
 
@@ -40,15 +48,23 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#0a0c0e",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" suppressHydrationWarning>
-      <body className={`${syne.variable} ${dmSans.variable} font-sans antialiased`}>
+    <html lang="es">
+      <body
+        className={`${martian.variable} ${plexMono.variable} ${plexSans.variable} font-sans antialiased`}
+      >
         {children}
+        {/* película de ruido global — textura CRT sutil */}
+        <div className="noise" aria-hidden="true" />
       </body>
     </html>
   );

@@ -1,24 +1,24 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Sun, Moon, Menu, X } from 'lucide-react';
-import { NAV_ITEMS, PERSONAL_INFO } from '@/lib/constants';
+import { Menu, X } from 'lucide-react';
+import { NAV_ITEMS, PERSONAL_INFO, SYSTEM } from '@/lib/constants';
+import { Uptime } from '@/components/shared/Uptime';
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 24);
       const sections = NAV_ITEMS.map((item) => item.href.replace('#', ''));
       const current = sections.find((section) => {
         const el = document.getElementById(section);
         if (el) {
           const rect = el.getBoundingClientRect();
-          return rect.top <= 120 && rect.bottom >= 120;
+          return rect.top <= 130 && rect.bottom >= 130;
         }
         return false;
       });
@@ -26,23 +26,13 @@ export function Header() {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
+    const raf = requestAnimationFrame(handleScroll);
 
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
-    setIsDark(shouldBeDark);
-    if (shouldBeDark) document.documentElement.classList.add('dark');
-
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(raf);
+    };
   }, []);
-
-  const toggleTheme = () => {
-    const next = !isDark;
-    setIsDark(next);
-    document.documentElement.classList.toggle('dark', next);
-    localStorage.setItem('theme', next ? 'dark' : 'light');
-  };
 
   const nav = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
@@ -52,112 +42,107 @@ export function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled || isMobileMenuOpen ? 'bg-bg py-3' : 'py-5'
-      } ${isScrolled && !isMobileMenuOpen ? 'glass-nav' : ''}`}
+      className={`fixed top-0 left-0 right-0 z-50 border-b transition-colors duration-300 ${
+        isScrolled || isMobileMenuOpen
+          ? 'bg-bg/90 backdrop-blur-md border-border'
+          : 'bg-transparent border-transparent'
+      }`}
     >
       <div className="section-container">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
+        <div className="flex h-12 items-center justify-between gap-4">
+          {/* Identidad del sistema */}
           <a
             href="#hero"
             onClick={(e) => nav(e, '#hero')}
-            className="font-display text-lg font-bold text-text tracking-tight"
+            className="flex items-center gap-2.5 font-mono text-xs text-text shrink-0"
           >
-            pj<span className="text-accent">.</span>
+            <span className="status-dot" aria-hidden="true" />
+            <span className="font-semibold tracking-tight">{SYSTEM.host}</span>
+            <span className="hidden xl:inline text-text-muted">— operational</span>
           </a>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1">
-            {NAV_ITEMS.map((item) => {
-              const active = activeSection === item.href.replace('#', '');
+          {/* Nav desktop */}
+          <nav className="hidden md:flex items-center">
+            {NAV_ITEMS.map((item, i) => {
+              const id = item.href.replace('#', '');
+              const active = activeSection === id;
               return (
                 <a
                   key={item.href}
                   href={item.href}
                   onClick={(e) => nav(e, item.href)}
-                  className={`px-3 py-1.5 text-xs font-mono tracking-wide transition-colors ${
-                    active
-                      ? 'text-accent'
-                      : 'text-text-muted hover:text-text'
+                  aria-current={active ? 'true' : undefined}
+                  className={`px-2.5 py-1.5 font-mono text-[11px] tracking-wide transition-colors ${
+                    active ? 'text-accent' : 'text-text-muted hover:text-text'
                   }`}
                 >
+                  <span className="opacity-50 mr-1" aria-hidden="true">
+                    {String(i).padStart(2, '0')}
+                  </span>
                   {item.label}
                 </a>
               );
             })}
           </nav>
 
-          {/* Right */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={toggleTheme}
-              className="p-2 text-text-muted hover:text-accent transition-colors"
-              aria-label="Toggle theme"
+          {/* Derecha: uptime + CV + menú móvil */}
+          <div className="flex items-center gap-3 shrink-0">
+            <span
+              className="hidden lg:flex items-center gap-1.5 font-mono text-[11px] text-text-muted tabular-nums"
+              title="uptime profesional — desde el primer deploy"
             >
-              {isDark ? <Sun className="w-[17px] h-[17px]" /> : <Moon className="w-[17px] h-[17px]" />}
-            </button>
+              up <Uptime className="text-text-secondary" />
+            </span>
 
             <a
               href={PERSONAL_INFO.resumeUrl}
-              className="hidden md:inline-flex font-mono text-xs tracking-wide px-4 py-2 border border-border-strong text-text hover:border-accent hover:text-accent transition-colors"
+              className="hidden md:inline-flex font-mono text-[11px] tracking-wide px-3 py-1.5 border border-border-strong text-text hover:border-accent hover:text-accent transition-colors"
             >
-              CV
-            </a>
-
-            <a
-              href="#contact"
-              onClick={(e) => nav(e, '#contact')}
-              className="hidden md:inline-flex font-mono text-xs tracking-wide px-4 py-2 bg-accent text-[#0C0C0C] hover:bg-accent-hover transition-colors"
-            >
-              Contactar
+              GET /cv
             </a>
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden p-2 text-text-muted hover:text-text transition-colors"
-              aria-label="Menu"
+              aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+              aria-expanded={isMobileMenuOpen}
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Menú móvil */}
         {isMobileMenuOpen && (
-          <div className="md:hidden mt-4 py-4 border-t border-border animate-reveal-in bg-bg">
-            <nav className="flex flex-col gap-1 mb-4">
-              {NAV_ITEMS.map((item) => {
-                const active = activeSection === item.href.replace('#', '');
+          <div className="md:hidden py-4 border-t border-border animate-log">
+            <nav className="flex flex-col mb-4">
+              {NAV_ITEMS.map((item, i) => {
+                const id = item.href.replace('#', '');
+                const active = activeSection === id;
                 return (
                   <a
                     key={item.href}
                     href={item.href}
                     onClick={(e) => nav(e, item.href)}
-                    className={`px-3 py-2.5 text-sm font-mono tracking-wide transition-colors ${
-                      active ? 'text-accent' : 'text-text-muted hover:text-text'
+                    aria-current={active ? 'true' : undefined}
+                    className={`px-2 py-3 font-mono text-sm tracking-wide border-b border-border/50 transition-colors ${
+                      active ? 'text-accent' : 'text-text-secondary hover:text-text'
                     }`}
                   >
+                    <span className="opacity-50 mr-2" aria-hidden="true">
+                      {String(i).padStart(2, '0')}
+                    </span>
                     {item.label}
                   </a>
                 );
               })}
             </nav>
-            <div className="flex gap-2 pt-3 border-t border-border">
-              <a
-                href={PERSONAL_INFO.resumeUrl}
-                className="flex-1 text-center font-mono text-xs tracking-wide px-4 py-3 border border-border-strong text-text"
-              >
-                CV
-              </a>
-              <a
-                href="#contact"
-                onClick={(e) => nav(e, '#contact')}
-                className="flex-1 text-center font-mono text-xs tracking-wide px-4 py-3 bg-accent text-[#0C0C0C]"
-              >
-                Contactar
-              </a>
-            </div>
+            <a
+              href={PERSONAL_INFO.resumeUrl}
+              className="inline-flex font-mono text-xs tracking-wide px-4 py-3 border border-border-strong text-text"
+            >
+              GET /cv.pdf
+            </a>
           </div>
         )}
       </div>

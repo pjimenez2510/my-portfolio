@@ -1,53 +1,42 @@
-import { Server, Monitor, Database, Wrench } from 'lucide-react';
 import { skillCategories } from '@/data/skills';
-
-const categoryIcons: Record<string, React.ElementType> = {
-  Backend: Server,
-  Frontend: Monitor,
-  'Bases de Datos': Database,
-  'Herramientas y Prácticas': Wrench,
-};
+import { SectionRule } from '../shared/SectionRule';
 
 export function Skills() {
   return (
-    <section id="skills" className="py-24 sm:py-32 bg-bg-alt grain">
+    <section id="skills" className="py-24 lg:py-32 border-t border-border">
       <div className="section-container">
-        {/* Section label */}
-        <div className="flex items-center gap-4 mb-16">
-          <div className="accent-line" />
-          <span className="font-mono text-xs text-accent tracking-widest uppercase">Habilidades</span>
-        </div>
+        <SectionRule index="04" title="Stack" code="DEPS/MANIFEST" />
 
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-text leading-tight mb-12">
-          Stack tecnológico
-        </h2>
+        <p className="font-mono text-xs text-text-muted mb-10 max-w-2xl">
+          sin barras de progreso inventadas — cada dependencia lista los{' '}
+          <span className="text-text-secondary">sistemas reales en producción</span> que la usan
+        </p>
 
-        <div className="grid sm:grid-cols-2 gap-6">
-          {skillCategories.map((category) => {
-            const Icon = categoryIcons[category.title] || Wrench;
-
-            return (
-              <div key={category.title} className="p-6 border border-border rounded-sm bg-bg-elevated">
-                <div className="flex items-center gap-3 mb-5">
-                  <Icon className="w-4 h-4 text-accent" />
-                  <h3 className="font-display font-semibold text-text text-sm tracking-wide">
-                    {category.title}
-                  </h3>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {category.skills.map((skill) => (
-                    <span
-                      key={skill.name}
-                      className="px-3 py-2 text-sm text-text border border-border rounded-sm hover:border-accent/40 hover:text-accent transition-colors cursor-default"
-                    >
-                      {skill.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+        {/* Manifiesto de dependencias — grid con hairlines */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border border border-border">
+          {skillCategories.map((category) => (
+            <div key={category.title} className="bg-panel p-5 sm:p-6">
+              <h3 className="font-mono text-xs text-accent mb-5">{category.dir}/</h3>
+              <ul className="space-y-3.5">
+                {category.skills.map((skill, i) => {
+                  const last = i === category.skills.length - 1;
+                  return (
+                    <li key={skill.name} className="font-mono text-xs leading-relaxed">
+                      <span className="text-text-muted select-none" aria-hidden="true">
+                        {last ? '└─ ' : '├─ '}
+                      </span>
+                      <span className="text-text">{skill.name}</span>
+                      {skill.usedIn.length > 0 && (
+                        <span className="block pl-6 text-[10px] text-text-muted mt-0.5">
+                          ↳ {skill.usedIn[0] === '*' ? 'transversal' : skill.usedIn.join(' · ')}
+                        </span>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
     </section>

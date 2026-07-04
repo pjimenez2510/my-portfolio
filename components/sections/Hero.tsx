@@ -1,109 +1,149 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { ArrowDown } from 'lucide-react';
+import { PERSONAL_INFO, SYSTEM, TICKER_ITEMS } from '@/lib/constants';
 import { SocialLinks } from '../shared/SocialLinks';
-import { PERSONAL_INFO } from '@/lib/constants';
+import { Uptime } from '../shared/Uptime';
+
+/** Secuencia de arranque — decorativa, oculta a lectores de pantalla */
+const BOOT_LINES = [
+  { t: '0.012s', msg: `init ${SYSTEM.host} ${SYSTEM.version}`, ok: true },
+  { t: '0.087s', msg: 'runtime: jvm · dotnet · node', ok: true },
+  { t: '0.164s', msg: 'mount: experiencia(6) · servicios(6)', ok: true },
+  { t: '0.201s', msg: 'status: accepting_connections', ok: false },
+];
+
+/** Delays de la animación de boot, en ms */
+const D = (i: number) => ({ animationDelay: `${i}ms` });
 
 export function Hero() {
-  const roles = ['Full Stack Developer', 'Backend Developer', 'Frontend Developer'];
-  const [currentRole, setCurrentRole] = useState(0);
-  const [displayed, setDisplayed] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    const text = roles[currentRole];
-    let timeout: NodeJS.Timeout;
-    if (!isDeleting && displayed === text) {
-      timeout = setTimeout(() => setIsDeleting(true), 2400);
-    } else if (isDeleting && displayed === '') {
-      setIsDeleting(false);
-      setCurrentRole((prev) => (prev + 1) % roles.length);
-    } else {
-      timeout = setTimeout(() => {
-        setDisplayed(
-          isDeleting
-            ? text.substring(0, displayed.length - 1)
-            : text.substring(0, displayed.length + 1)
-        );
-      }, isDeleting ? 35 : 70);
-    }
-    return () => clearTimeout(timeout);
-  }, [displayed, isDeleting, currentRole, roles]);
-
   return (
     <section
       id="hero"
-      className="min-h-[100dvh] flex items-end sm:items-center relative overflow-hidden grain"
+      className="min-h-dvh flex flex-col justify-center relative overflow-hidden pt-24 pb-20"
     >
-      {/* Decorative corner accent */}
-      <div className="absolute top-0 right-0 w-px h-40 bg-accent/30 hidden lg:block" />
-      <div className="absolute top-0 right-0 h-px w-40 bg-accent/30 hidden lg:block" />
+      {/* Glow ámbar superior */}
+      <div
+        aria-hidden="true"
+        className="absolute -top-40 right-[-15%] w-[52rem] h-[32rem] pointer-events-none opacity-[0.07]"
+        style={{ background: 'radial-gradient(ellipse at center, #ffb224, transparent 65%)' }}
+      />
 
-      <div className="section-container relative z-10 pb-24 sm:pb-0 w-full">
-        <div className="max-w-2xl stagger">
+      {/* Línea de escaneo */}
+      <div className="scanline" aria-hidden="true" />
 
-          {/* Mono greeting */}
-          <p className="font-mono text-xs sm:text-sm text-accent tracking-widest uppercase mb-6 animate-reveal">
-            // hola, soy
-          </p>
+      <div className="section-container relative z-10 w-full">
+        {/* Boot log */}
+        <div
+          className="font-mono text-[11px] sm:text-xs leading-relaxed mb-10 text-text-muted"
+          aria-hidden="true"
+        >
+          {BOOT_LINES.map((line, i) => (
+            <p key={i} className="animate-boot" style={D(i * 130)}>
+              <span className="opacity-60">[ {line.t} ]</span> {line.msg}{' '}
+              {line.ok ? (
+                <span className="text-ok">ok</span>
+              ) : (
+                <span className="text-ok">● listo</span>
+              )}
+            </p>
+          ))}
+        </div>
 
-          {/* Name - editorial typography */}
-          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-extrabold tracking-tight leading-[0.95] text-text mb-5 animate-reveal">
-            Patricio
-            <br />
-            <span className="text-accent">Jiménez</span>
-          </h1>
-
-          {/* Accent line */}
-          <div className="accent-line mb-6 animate-reveal" />
-
-          {/* Typing role */}
-          <div className="h-8 sm:h-10 flex items-center mb-6 animate-reveal">
-            <span className="font-mono text-sm sm:text-base text-text-secondary tracking-wide">
-              {'> '}{displayed}
-              <span className="text-accent animate-pulse">_</span>
+        {/* Nombre — sin tilde en el display: Martian Mono la coloca
+            demasiado alto en mayúsculas. El sr-only lleva el nombre correcto. */}
+        <h1 className="font-display font-bold uppercase leading-[0.98] tracking-tight text-text text-[clamp(2.7rem,9vw,6.5rem)] mb-8">
+          <span className="sr-only">Patricio Jiménez</span>
+          <span aria-hidden="true">
+            <span className="block animate-boot" style={D(560)}>
+              Patricio
             </span>
+            <span className="block text-outline animate-boot" style={D(700)}>
+              Jimenez
+            </span>
+          </span>
+        </h1>
+
+        {/* Metadata del proceso */}
+        <div
+          className="flex flex-wrap gap-x-6 gap-y-1.5 font-mono text-xs sm:text-sm text-text-secondary mb-10 animate-boot"
+          style={D(840)}
+        >
+          <span>
+            <span className="text-accent">role:</span> full_stack_developer
+          </span>
+          <span>
+            <span className="text-accent">region:</span> ambato-ec · utc-5
+          </span>
+          <span className="hidden sm:inline">
+            <span className="text-accent">arch:</span> clean-architecture
+          </span>
+        </div>
+
+        {/* Readouts — solo datos reales */}
+        <div
+          className="grid sm:grid-cols-3 border-y border-border divide-y sm:divide-y-0 sm:divide-x divide-border mb-10 max-w-2xl animate-boot"
+          style={D(960)}
+        >
+          <div className="py-4 sm:px-5 sm:first:pl-0">
+            <p className="label-mono mb-1.5">sistemas_en_prod</p>
+            <p className="font-display text-2xl font-bold text-text">06</p>
           </div>
-
-          {/* Bio */}
-          <p className="text-base sm:text-lg text-text-secondary leading-relaxed max-w-lg mb-10 animate-reveal">
-            {PERSONAL_INFO.bio}
-          </p>
-
-          {/* CTAs */}
-          <div className="flex flex-wrap items-center gap-4 mb-10 animate-reveal">
-            <a
-              href="#contact"
-              className="px-7 py-3 bg-accent text-[#0C0C0C] rounded-none font-display font-semibold text-sm tracking-wide hover:bg-accent-hover transition-colors"
-            >
-              Hablemos
-            </a>
-            <a
-              href={PERSONAL_INFO.resumeUrl}
-              className="px-7 py-3 border border-border-strong text-text font-display font-semibold text-sm tracking-wide hover:border-accent hover:text-accent transition-colors"
-            >
-              Ver CV
-            </a>
+          <div className="py-4 sm:px-5">
+            <p className="label-mono mb-1.5">usuarios_servidos</p>
+            <p className="font-display text-2xl font-bold text-text">20K+</p>
           </div>
-
-          {/* Social */}
-          <div className="animate-reveal">
-            <SocialLinks />
+          <div className="py-4 sm:px-5">
+            <p className="label-mono mb-1.5">uptime_profesional</p>
+            <p className="font-mono text-lg sm:text-xl text-accent tabular-nums pt-1">
+              <Uptime />
+            </p>
           </div>
         </div>
 
-        {/* Scroll hint */}
-        <a
-          href="#about"
-          className="absolute bottom-8 right-6 sm:right-0 flex flex-col items-center gap-2 text-text-muted hover:text-accent transition-colors group"
-          aria-label="Scroll down"
-        >
-          <span className="font-mono text-[10px] tracking-[0.3em] uppercase rotate-90 origin-center translate-y-6 hidden sm:block">
-            Scroll
-          </span>
-          <ArrowDown className="w-4 h-4 animate-bounce sm:mt-12" />
-        </a>
+        {/* CTAs */}
+        <div className="flex flex-wrap items-center gap-4 animate-boot" style={D(1080)}>
+          <a
+            href="#projects"
+            className="px-6 py-3.5 bg-accent text-[#0a0c0e] font-mono text-xs font-semibold tracking-wider uppercase hover:bg-accent-hover transition-colors"
+          >
+            ver servicios ↓
+          </a>
+          <a
+            href={PERSONAL_INFO.resumeUrl}
+            className="px-6 py-3.5 border border-border-strong text-text font-mono text-xs tracking-wider uppercase hover:border-accent hover:text-accent transition-colors"
+          >
+            get /cv.pdf
+          </a>
+          <SocialLinks className="ml-1" />
+        </div>
+      </div>
+
+      {/* Coordenadas — detalle HUD */}
+      <span
+        className="absolute bottom-16 left-5 sm:left-10 font-mono text-[10px] tracking-[0.25em] text-text-muted/60 hidden sm:block"
+        aria-hidden="true"
+      >
+        01.24°S · 78.61°W
+      </span>
+
+      {/* Cinta de métricas */}
+      <div
+        className="absolute bottom-0 inset-x-0 border-t border-border ticker bg-bg/60"
+        aria-hidden="true"
+      >
+        <div className="ticker-track py-3">
+          {[0, 1].map((copy) => (
+            <div key={copy} className="flex shrink-0">
+              {TICKER_ITEMS.map((item) => (
+                <span
+                  key={item}
+                  className="font-mono text-[11px] uppercase tracking-[0.2em] text-text-muted whitespace-nowrap px-5"
+                >
+                  {item}
+                  <span className="text-accent/50 pl-10">▪</span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

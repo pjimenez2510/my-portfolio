@@ -1,190 +1,178 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
-import { ExternalLink, ArrowUpRight, Server, Layout, Smartphone, Layers } from 'lucide-react';
 import { projects } from '@/data/projects';
+import { SectionRule } from '../shared/SectionRule';
 import type { Project } from '@/lib/types';
 
-type FilterCategory = 'all' | 'backend' | 'frontend' | 'fullstack' | 'mobile';
+type FilterCategory = 'all' | 'fullstack' | 'backend' | 'frontend';
 
-const categoryLabels: Record<string, string> = {
-  all: 'Todos',
-  fullstack: 'Full Stack',
-  backend: 'Backend',
-  frontend: 'Frontend',
-  mobile: 'Mobile',
-};
+const CATEGORIES: FilterCategory[] = ['all', 'fullstack', 'backend', 'frontend'];
 
-const categoryIcons: Record<string, React.ElementType> = {
-  fullstack: Layers,
-  backend: Server,
-  frontend: Layout,
-  mobile: Smartphone,
-};
+function StatusChip({ status }: { status: Project['status'] }) {
+  if (status === 'prod') {
+    return (
+      <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-ok">
+        <span className="w-1.5 h-1.5 rounded-full bg-ok animate-pulse" aria-hidden="true" />
+        prod
+      </span>
+    );
+  }
+  return (
+    <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-text-muted">
+      <span className="w-1.5 h-1.5 rounded-full border border-text-muted" aria-hidden="true" />
+      stable
+    </span>
+  );
+}
 
 export function Projects() {
   const [filter, setFilter] = useState<FilterCategory>('all');
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [preview, setPreview] = useState<Project | null>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
 
-  const filtered = projects.filter(
-    (p) => filter === 'all' || p.category === filter
-  );
+  const filtered = projects.filter((p) => filter === 'all' || p.category === filter);
+  const inProd = projects.filter((p) => p.status === 'prod').length;
 
-  // First featured project gets a large card
-  const featured = filtered.find((p) => p.featured);
-  const rest = filtered.filter((p) => p !== featured);
+  // El preview flotante sigue al cursor sin re-renders (transform directo al DOM)
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const el = previewRef.current;
+    if (!el) return;
+    const y = Math.min(e.clientY - 90, window.innerHeight - 230);
+    el.style.transform = `translate(${e.clientX + 28}px, ${Math.max(y, 12)}px)`;
+  };
 
   return (
-    <section id="projects" className="py-24 sm:py-32">
+    <section id="projects" className="py-24 lg:py-32 border-t border-border">
       <div className="section-container">
-        {/* Section label */}
-        <div className="flex items-center gap-4 mb-16">
-          <div className="accent-line" />
-          <span className="font-mono text-xs text-accent tracking-widest uppercase">Proyectos</span>
+        <SectionRule index="03" title="Servicios" code="SVC/CATALOG" />
+
+        {/* Filtros */}
+        <div className="flex flex-wrap items-center gap-2 mb-8">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setFilter(cat)}
+              aria-pressed={filter === cat}
+              className={`font-mono text-[11px] px-3 py-1.5 border transition-colors cursor-pointer ${
+                filter === cat
+                  ? 'border-accent text-accent bg-accent-soft'
+                  : 'border-border text-text-muted hover:text-text hover:border-border-strong'
+              }`}
+            >
+              --{cat === 'all' ? 'todos' : cat}
+            </button>
+          ))}
+          <span className="ml-auto font-mono text-[11px] text-text-muted hidden sm:block">
+            {filtered.length} servicios · {inProd} en producción
+          </span>
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-text leading-tight">
-            Trabajo seleccionado
-          </h2>
+        {/* Catálogo */}
+        <div
+          className="border border-border bg-panel"
+          onMouseMove={handleMouseMove}
+          onMouseLeave={() => setPreview(null)}
+        >
+          {filtered.map((project) => {
+            const open = openId === project.id;
+            return (
+              <div key={project.id} className="border-b border-border last:border-b-0">
+                <button
+                  onClick={() => setOpenId(open ? null : project.id)}
+                  onMouseEnter={() => setPreview(project.thumbnail ? project : null)}
+                  aria-expanded={open}
+                  className="w-full text-left px-4 sm:px-6 py-5 hover:bg-elevated/60 transition-colors group cursor-pointer"
+                >
+                  <div className="flex items-center justify-between gap-4 mb-1.5">
+                    <span className="font-mono text-xs text-accent">svc/{project.slug}</span>
+                    <span className="flex items-center gap-4 shrink-0">
+                      <span className="font-mono text-[10px] text-text-muted">{project.year}</span>
+                      <StatusChip status={project.status} />
+                    </span>
+                  </div>
+                  <div className="flex items-baseline justify-between gap-6">
+                    <div className="min-w-0">
+                      <h3 className="font-display text-base sm:text-lg font-semibold text-text group-hover:text-accent transition-colors">
+                        {project.title}
+                      </h3>
+                      <p className="text-sm text-text-secondary mt-1 max-w-2xl leading-relaxed">
+                        {project.description}
+                      </p>
+                    </div>
+                    <span
+                      className="hidden md:block font-mono text-[10px] text-text-muted whitespace-nowrap shrink-0"
+                      aria-hidden="true"
+                    >
+                      {open ? '− cerrar' : '+ detalles'}
+                    </span>
+                  </div>
+                </button>
 
-          <div className="flex gap-1 p-1 bg-bg-alt border border-border rounded-sm">
-            {(['all', 'fullstack', 'backend', 'frontend', 'mobile'] as FilterCategory[]).map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setFilter(cat)}
-                className={`px-3 py-1.5 text-xs font-mono tracking-wide transition-colors rounded-sm ${
-                  filter === cat
-                    ? 'bg-accent text-[#0C0C0C] font-medium'
-                    : 'text-text-muted hover:text-text'
-                }`}
-              >
-                {categoryLabels[cat]}
-              </button>
-            ))}
-          </div>
+                {/* Detalle expandido */}
+                {open && (
+                  <div className="px-4 sm:px-6 pb-6 animate-log">
+                    <div className="grid md:grid-cols-2 gap-6 pt-2 border-t border-border/60">
+                      <div className="pt-4">
+                        <p className="text-sm text-text-secondary leading-relaxed mb-4">
+                          {project.longDescription || project.description}
+                        </p>
+                        {project.metric && (
+                          <p className="font-mono text-[11px] mb-4">
+                            <span className="text-accent">metric:</span>{' '}
+                            <span className="text-text-secondary">{project.metric}</span>
+                          </p>
+                        )}
+                        <p className="font-mono text-[11px] text-text-muted">
+                          <span className="text-accent/70">deps:</span>{' '}
+                          {project.technologies.join(' · ').toLowerCase()}
+                        </p>
+                      </div>
+                      {project.thumbnail && (
+                        <div className="relative aspect-video border border-border bg-elevated overflow-hidden mt-4">
+                          <Image
+                            src={project.thumbnail}
+                            alt={`Captura de ${project.title}`}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
+      </div>
 
-        {/* Featured project - large card */}
-        {featured && (
-          <div className="mb-6">
-            <FeaturedCard project={featured} />
-          </div>
-        )}
-
-        {/* Rest - smaller grid */}
-        {rest.length > 0 && (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {rest.map((project) => (
-              <CompactCard key={project.id} project={project} />
-            ))}
+      {/* Preview flotante — solo desktop con puntero */}
+      <div
+        ref={previewRef}
+        aria-hidden="true"
+        className={`fixed left-0 top-0 z-40 pointer-events-none hidden lg:block transition-opacity duration-150 ${
+          preview ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        {preview?.thumbnail && (
+          <div className="w-[320px] aspect-video relative border border-border-strong bg-elevated overflow-hidden shadow-2xl shadow-black/60">
+            <Image
+              src={preview.thumbnail}
+              alt=""
+              fill
+              className="object-cover"
+              sizes="320px"
+            />
+            <div className="absolute inset-x-0 bottom-0 font-mono text-[10px] px-2.5 py-1.5 bg-bg/90 text-accent border-t border-border">
+              svc/{preview.slug}
+            </div>
           </div>
         )}
       </div>
     </section>
-  );
-}
-
-function FeaturedCard({ project }: { project: Project }) {
-  return (
-    <div className="grid md:grid-cols-2 gap-0 border border-border rounded-sm overflow-hidden bg-bg-elevated group">
-      {/* Image */}
-      <div className="relative aspect-video md:aspect-auto bg-bg-alt overflow-hidden">
-        {project.thumbnail ? (
-          <Image
-            src={project.thumbnail}
-            alt={project.title}
-            fill
-            className="object-cover group-hover:scale-[1.03] transition-transform duration-700"
-            sizes="(max-width: 768px) 100vw, 50vw"
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Layers className="w-16 h-16 text-text-muted/20" />
-          </div>
-        )}
-      </div>
-
-      {/* Content */}
-      <div className="p-6 sm:p-8 flex flex-col justify-center">
-        <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-accent mb-3">
-          Destacado &middot; {project.year}
-        </span>
-        <h3 className="font-display text-xl sm:text-2xl font-bold text-text mb-3">
-          {project.title}
-        </h3>
-        <p className="text-sm text-text-secondary leading-relaxed mb-5">
-          {project.longDescription || project.description}
-        </p>
-        <div className="flex flex-wrap gap-2 mb-5">
-          {project.technologies.map((tech) => (
-            <span key={tech} className="font-mono text-[11px] px-2.5 py-1 text-text-muted border border-border rounded-sm">
-              {tech}
-            </span>
-          ))}
-        </div>
-        {(project.links.github || project.links.demo) && (
-          <div className="flex gap-4">
-            {project.links.github && (
-              <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-mono text-text-secondary hover:text-accent transition-colors">
-                Código <ArrowUpRight className="w-3 h-3" />
-              </a>
-            )}
-            {project.links.demo && (
-              <a href={project.links.demo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-mono text-text-secondary hover:text-accent transition-colors">
-                Demo <ExternalLink className="w-3 h-3" />
-              </a>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function CompactCard({ project }: { project: Project }) {
-  const Icon = categoryIcons[project.category] || Layers;
-
-  return (
-    <div className="border border-border rounded-sm bg-bg-elevated overflow-hidden group hover:border-accent/30 transition-colors">
-      {/* Image */}
-      <div className="relative aspect-video bg-bg-alt overflow-hidden">
-        {project.thumbnail ? (
-          <Image
-            src={project.thumbnail}
-            alt={project.title}
-            fill
-            className="object-cover group-hover:scale-[1.03] transition-transform duration-700"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Icon className="w-10 h-10 text-text-muted/20" />
-          </div>
-        )}
-      </div>
-
-      <div className="p-5">
-        <div className="flex items-center gap-2 mb-2">
-          <Icon className="w-3.5 h-3.5 text-text-muted" />
-          <span className="font-mono text-[10px] text-text-muted uppercase tracking-wider">
-            {project.category} &middot; {project.year}
-          </span>
-        </div>
-        <h3 className="font-display text-base font-bold text-text mb-2 leading-snug">
-          {project.title}
-        </h3>
-        <p className="text-sm text-text-secondary leading-relaxed mb-4">
-          {project.description}
-        </p>
-        <div className="flex flex-wrap gap-1.5">
-          {project.technologies.map((tech) => (
-            <span key={tech} className="font-mono text-[10px] px-2 py-0.5 text-text-muted border border-border rounded-sm">
-              {tech}
-            </span>
-          ))}
-        </div>
-      </div>
-    </div>
   );
 }
