@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { SYSTEM } from '@/lib/constants';
 import { SectionRule } from '../shared/SectionRule';
 
@@ -57,6 +58,43 @@ export function About() {
 
           {/* Paneles de sistema */}
           <div className="lg:col-span-5 space-y-6">
+            {/* operator — retrato con tratamiento duotono para integrarlo al sistema */}
+            <div className="border border-border bg-panel">
+              <div className="flex items-center justify-between px-4 py-2.5 border-b border-border">
+                <span className="label-mono">operator</span>
+                <span className="flex items-center gap-2 label-mono text-ok">
+                  <span className="status-dot scale-75" aria-hidden="true" />
+                  online
+                </span>
+              </div>
+              <div className="relative aspect-4/3 overflow-hidden">
+                <Image
+                  src="/pjimenez-photo.jpeg"
+                  alt="Retrato de Patricio Jiménez"
+                  fill
+                  className="object-cover object-[50%_22%] grayscale contrast-110 brightness-90"
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                />
+                {/* tinte ámbar */}
+                <div
+                  className="absolute inset-0 bg-accent mix-blend-color opacity-30"
+                  aria-hidden="true"
+                />
+                {/* scanlines CRT */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  aria-hidden="true"
+                  style={{
+                    backgroundImage:
+                      'repeating-linear-gradient(0deg, rgba(10,12,14,0.22) 0px, rgba(10,12,14,0.22) 1px, transparent 1px, transparent 3px)',
+                  }}
+                />
+              </div>
+              <div className="px-4 py-2.5 border-t border-border font-mono text-[10px] tracking-wider text-text-muted">
+                [fig. 01] pjimenez — ambato-ec · full_stack
+              </div>
+            </div>
+
             {/* host_info */}
             <div className="border border-border bg-panel">
               <div className="flex items-center justify-between px-4 py-2.5 border-b border-border">
